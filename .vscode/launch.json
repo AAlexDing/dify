@@ -2,6 +2,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Next.js",
+            "type": "pwa-node",
+            "request": "launch",
+            "runtimeExecutable": "${workspaceFolder}/web/",
+            "runtimeArgs": [
+                "dev"
+            ],
+            "port": 3000,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+
+        {
             "name": "Python: Flask",
             "type": "debugpy",
             "request": "launch",

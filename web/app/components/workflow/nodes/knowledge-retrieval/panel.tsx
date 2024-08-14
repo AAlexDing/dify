@@ -30,7 +30,7 @@ const Panel: FC<NodePanelProps<KnowledgeRetrievalNodeType>> = ({
 }) => {
   const { t } = useTranslation()
 
-  const arrayStringfilterVar = React.useCallback((varPayload: Var) => {
+  const arrayStringfilterVar = useCallback((varPayload: Var) => {
     return varPayload.type === VarType.arrayString
   }, [])
 
