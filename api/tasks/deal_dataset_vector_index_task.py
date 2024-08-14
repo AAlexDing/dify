@@ -66,8 +66,7 @@ def deal_dataset_vector_index_task(dataset_id: str, action: str):
                                         "dataset_id": segment.dataset_id,
                                     }
                                 )
-
-                                documents.append(document)
+                                documents.append(document) 
                             # save vector index
                             index_processor.load(dataset, documents, with_keywords=False)
                         db.session.query(DatasetDocument).filter(DatasetDocument.id == dataset_document.id) \
