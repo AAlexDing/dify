@@ -15,7 +15,8 @@ from core.rag.retrieval.dataset_retrieval import DatasetRetrieval
 from core.rag.retrieval.retrival_methods import RetrievalMethod
 from core.workflow.entities.base_node_data_entities import BaseNodeData
 from core.workflow.entities.node_entities import NodeRunResult, NodeType
-from core.workflow.entities.variable_pool import ValueType, VariablePool
+from core.workflow.entities.variable_pool import VariablePool
+from core.app.segments.types import SegmentType
 from core.workflow.nodes.base_node import BaseNode
 from core.workflow.nodes.knowledge_retrieval.entities import KnowledgeRetrievalNodeData
 from extensions.ext_database import db
@@ -98,7 +99,7 @@ class KnowledgeRetrievalNode(BaseNode):
             if len(node_data.authorized_dataset_ids_variable_selector) >= 2:
                 authorized_dataset_ids = variable_pool.get_variable_value(
                     variable_selector=node_data.authorized_dataset_ids_variable_selector,
-                    target_value_type=ValueType.ARRAY_STRING
+                    target_value_type=SegmentType.ARRAY_STRING
                 )
         if authorized_dataset_ids:
             for dataset_id in authorized_dataset_ids:
