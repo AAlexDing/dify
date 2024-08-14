@@ -1,3 +1,4 @@
+import ast
 import datetime
 import json
 import logging
@@ -495,6 +496,16 @@ class DocumentService:
         return document
 
     @staticmethod
+    def get_documents(dataset_id: str, document_ids: list[str]) -> list[Document]:
+        documents = db.session.query(Document).filter(
+            Document.id.in_(document_ids),
+            Document.dataset_id == dataset_id
+        ).all()
+
+        return documents
+
+
+    @staticmethod
     def get_document_by_id(document_id: str) -> Optional[Document]:
         document = db.session.query(Document).filter(
             Document.id == document_id
@@ -844,8 +855,9 @@ class DocumentService:
                                 document_data["doc_form"],
                                 document_data["doc_language"],
                                 data_source_info, created_from, position,
-                                account, page['page_name'], batch
-                            )
+                                account, page['page_name'], batch,
+                                document_data.get('doc_metadata'),
+                                document_data.get('doc_type'))
                             db.session.add(document)
                             db.session.flush()
                             document_ids.append(document.id)
@@ -904,10 +916,10 @@ class DocumentService:
 
     @staticmethod
     def build_document(
-        dataset: Dataset, process_rule_id: str, data_source_type: str, document_form: str,
-        document_language: str, data_source_info: dict, created_from: str, position: int,
-        account: Account,
-        name: str, batch: str
+            dataset: Dataset, process_rule_id: str, data_source_type: str, document_form: str,
+            document_language: str, data_source_info: dict, created_from: str, position: int,
+            account: Account, name: str, batch: str, doc_type: Optional[str] = None,
+            doc_metadata: Optional[str] = None
     ):
         document = Document(
             tenant_id=dataset.tenant_id,
@@ -921,7 +933,9 @@ class DocumentService:
             created_from=created_from,
             created_by=account.id,
             doc_form=document_form,
-            doc_language=document_language
+            doc_language=document_language,
+            doc_metadata=ast.literal_eval(doc_metadata) if doc_metadata else None,
+            doc_type=doc_type
         )
         return document
 
@@ -1368,7 +1382,7 @@ class SegmentService:
 
             # save vector index
             try:
-                VectorService.create_segments_vector([args['keywords']], [segment_document], dataset)
+                VectorService.create_segments_vector([args['keywords']], [segment_document], dataset, document)
             except Exception as e:
                 logging.exception("create segment index failed")
                 segment_document.enabled = False
@@ -1433,7 +1447,7 @@ class SegmentService:
 
             try:
                 # save vector index
-                VectorService.create_segments_vector(keywords_list, pre_segment_data_list, dataset)
+                VectorService.create_segments_vector(keywords_list, pre_segment_data_list, dataset, document)
             except Exception as e:
                 logging.exception("create segment index failed")
                 for segment_document in segment_data_list:
