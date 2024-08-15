@@ -16,7 +16,6 @@ from core.rag.retrieval.retrival_methods import RetrievalMethod
 from core.workflow.entities.base_node_data_entities import BaseNodeData
 from core.workflow.entities.node_entities import NodeRunResult, NodeType
 from core.workflow.entities.variable_pool import VariablePool
-from core.app.segments.types import SegmentType
 from core.workflow.nodes.base_node import BaseNode
 from core.workflow.nodes.knowledge_retrieval.entities import KnowledgeRetrievalNodeData
 from extensions.ext_database import db
