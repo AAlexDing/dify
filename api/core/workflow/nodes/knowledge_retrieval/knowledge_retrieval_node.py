@@ -97,9 +97,8 @@ class KnowledgeRetrievalNode(BaseNode):
         # check node_data.authorized_dataset_ids_variable_selector
         if isinstance(node_data.authorized_dataset_ids_variable_selector, list):
             if len(node_data.authorized_dataset_ids_variable_selector) >= 2:
-                authorized_dataset_ids = variable_pool.get_variable_value(
-                    variable_selector=node_data.authorized_dataset_ids_variable_selector,
-                    target_value_type=SegmentType.ARRAY_STRING
+                authorized_dataset_ids = variable_pool.get(
+                    variable_selector=node_data.authorized_dataset_ids_variable_selector
                 )
         if authorized_dataset_ids:
             for dataset_id in authorized_dataset_ids:
@@ -118,7 +117,7 @@ class KnowledgeRetrievalNode(BaseNode):
         if isinstance(filter_mode_to_metadata_filter_config_dict, dict):
             for filter_mode, metadata_filter_config in filter_mode_to_metadata_filter_config_dict.items():
                 for filter_item in metadata_filter_config.filter_items:
-                    filter_item.arg = variable_pool.get_variable_value(variable_selector=filter_item.value_selector)
+                    filter_item.arg = variable_pool.get(variable_selector=filter_item.value_selector)
 
     def _fetch_dataset_retriever(self, node_data: KnowledgeRetrievalNodeData, query: str) -> list[
         dict[str, Any]]:
